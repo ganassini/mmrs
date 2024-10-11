@@ -1,5 +1,5 @@
 .data
 .text
-	.globl register_rental
-register_rental:
+	.globl registerRental
+registerRental:
 	

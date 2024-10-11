@@ -1,8 +1,5 @@
 # trabalho final de AOC-1
 
-## TODO
-* alocação dinamica
-
 ## requirements
 * Acesso de vetores e strings na memória;
 * Laços e instruções de controle de fluxo de execução;
