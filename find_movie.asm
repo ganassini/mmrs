@@ -1,11 +1,10 @@
 .data
-	MOVIES_FILE_NAME: 		.asciiz "mmrs/movies.txt"        
-	PROMPT_MOVIE_TITLE: 	.asciiz "Título do filme: "
-	MSG_MOVIE_NOT_FOUND: 	.asciiz "Filme não encontrado.\n"
-	UNDERSCORE: 			.asciiz "_"
-	NEWLINE: 				.asciiz "\n" 
-	movieToSearch: 	.space 48 
-	buffer: 		.space 256                                                      
+	MOVIES_FILE_NAME: .asciiz "movies.txt"        
+	PROMPT_MOVIE_TITLE: .asciiz "Título do filme: "
+	MSG_MOVIE_NOT_FOUND: .asciiz "Filme não encontrado.\n"
+	movieToSearch: .space 48 
+	buffer: .space 256      
+	newline: .asciiz "\n"                                                 
 .text
 	.globl findMovie
 findMovie: 
@@ -24,98 +23,114 @@ findMovie:
     li 		$a2, 0                             
     syscall
 
-    move 	$s0, $v0                                             
+    move 	$s0, $v0                        
+
+    bltz 	$s0, exit                       
+
     li 		$t6, 0                            
-readFile:
+
+read_file:
     li 		$v0, 14                            
     move 	$a0, $s0                         
     la 		$a1, buffer                        
     li 		$a2, 256                           
     syscall
+    
+    add     $t0, $a1, $v0
+	sb      $zero, 0($t0)
 
-    beqz 	$v0, checkResults               
+    beqz 	$v0, check_results               
+
     la 		$t0, buffer                        
     li 		$t5, 0                             
-processBuffer:
-    lb 		$t1, 0($t0)                        
-    beqz 	$t1, compareStrings             
-    li 		$t2, 'A'                           
-    li 		$t3, 'Z'                           
-    li 		$t4, 'a'                           
-    blt 	$t1, $t2, checkSpace             
-    bgt 	$t1, $t3, checkSpace            
-    addi	$t1, $t1, 32                     
-    sb 		$t1, 0($t0)                       
-    j 		compareStrings
-checkSpace:
-    li 		$t6, ' '                           
-    beq 	$t1, $t6, replaceSpace           
-    addi 	$t0, $t0, 1                      
-    j 		processBuffer                      
-replaceSpace:
-    lb 		$t1, UNDERSCORE                    
-    sb 		$t1, 0($t0)                       
-    addi 	$t0, $t0, 1                      
-    j 		processBuffer                      
-compareStrings:
+
+process_buffer:
+    lb 		$t1, 0($t0)
+    
+	beq 	$t1, 32, spaceToUnderscore
+	blt 	$t1, 97, upperToLower
+	addi 	$t0, $t0, 1
+	
+	j 		compare_strings                       
+
+upperToLower:
+	addi 	$t1, $t1, 32
+	sb 		$t1, 0($t0)
+	addi 	$t0, $t0, 1
+	j 		process_buffer
+spaceToUnderscore:
+	li 		$t2, 95
+	sb 		$t2, 0($t0) 
+	addi 	$t0, $t0, 1
+	j 		process_buffer                     
+
+compare_strings:
     la 		$t0, buffer                        
     la 		$t1, movieToSearch                   
+
     la 		$t2, movieToSearch                   
     li 		$t3, 0                             
-processMovieToSearch:
-    lb 		$t4, 0($t2)                        
-    beqz 	$t4, readFile                  
-    li 		$t5, 'A'                           
-    li 		$t6, 'Z'                           
-    li 		$t7, 'a'                           
-    blt 	$t4, $t5, checkSearchSpace      
-    bgt 	$t4, $t6, checkSearchSpace      
-    addi 	$t4, $t4, 32                     
-    sb 		$t4, 0($t2)                          
-    j 		loop_compare
-checkSearchSpace:
-    li 		$t8, ' '                           
-    beq 	$t4, $t8, replaceSearchSpace     
-    addi 	$t2, $t2, 1                      
-    j 		processMovieToSearch                 
-replaceSearchSpace:
-    lb 		$t4, UNDERSCORE                    
-    sb	 	$t4, 0($t2)                       
-    addi 	$t2, $t2, 1                      
-    j 		processMovieToSearch                 
-	la 		$t0, buffer                        
-	la 		$t1, movieToSearch                   
-loop_compare:
+
+process_search_name:
+    lb 		$t4, 0($t2)
+    
+	beq 	$t4, 32, process_spaceToUnderscore
+	blt 	$t4, 97, process_upperToLower
+	addi 	$t2, $t2, 1                       
+    
+    j compare_loop
+
+process_upperToLower:
+	addi 	$t4, $t4, 32
+	sb 		$t4, 0($t2)
+	addi 	$t2, $t2, 1
+	j 		process_search_name
+process_spaceToUnderscore:
+	li 		$t5, 95
+	sb 		$t5, 0($t4) 
+	addi 	$t4, $t4, 1
+	j 		process_search_name                   
+
+compare_loop:
     lb 		$t2, 0($t0)                        
     lb 		$t3, 0($t1)                       
-    beqz 	$t2, checkEnd                   
-    beqz 	$t3, returnNotEqual           
-    bne 	$t2, $t3, returnNotEqual       
+
+    beqz 	$t2, check_end                   
+    beqz 	$t3, return_not_equal           
+
+    bne 	$t2, $t3, return_not_equal       
+
     addi 	$t0, $t0, 1                      
     addi 	$t1, $t1, 1                      
-    j 		loop_compare                      
-checkEnd:
+    j compare_loop                       
+
+check_end:
     beqz 	$t3, found   
-returnNotEqual:
-    j 		readFile                           
+
+return_not_equal:
+    j read_file                           
+
 found:
-    li 		$v0, 4                             
-    la 		$a0, buffer                        
+    li      $v0, 4            
+    la      $a0, buffer
     syscall
 
-    li 		$t6, 1                             
-    j 		readFile                           
-checkResults:
-    beqz 	$t6, notFoundMsg             
-    j 		closeFile                         
-notFoundMsg:
+    j close_file            
+
+check_results:
+    beqz    $t6, not_found_msg 
+    j close_file             
+                         
+not_found_msg:
     li 		$v0, 4                             
-    la 		$a0, MSG_MOVIE_NOT_FOUND                   
+    la 		$a0, MSG_MOVIE_NOT_FOUND                    
     syscall
-closeFile:
+
+close_file:
     li 		$v0, 16                            
     move 	$a0, $s0                         
     syscall
+
 exit:
     li 		$v0, 10                            
     syscall

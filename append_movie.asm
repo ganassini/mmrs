@@ -26,6 +26,7 @@ getMovieTitle:
 	la 		$a0, title
 	li 		$a1, 48
 	syscall
+	
 	# format title
 	la 		$s0, title 
 loop_formatName:
@@ -68,16 +69,15 @@ loop_checkForChar:
 charFound:
 	la 		$s0, MSG_RELEASE_YEAR_HAS_CHAR
 	la 		$s1, message
-	j 		endloop_charFound
 loop_charFound:
 	lb 		$s2, 0($s0)
-	beqz 	$s2, getMovieDuration
+	beqz 	$s2, endloop_charFound
 	sb 		$s2, 0($s1)
 	addi 	$s0, $s0, 1
 	addi 	$s1, $s1, 1
 	j 		loop_charFound
 endloop_charFound:
-	sb 		$s2, 1($s1)
+	sb 		$s2, 0($s1)
 	
 	jr 		$ra
 getMovieDuration:
@@ -98,6 +98,7 @@ getMovieDirector:
 	la 		$a0, director
 	li 		$a1, 48
 	syscall
+	
 	# format name
 	la 		$s0, director 
 loop_formatDirectorName:

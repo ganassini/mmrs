@@ -41,7 +41,7 @@ callRegisterRental:
 	jal 	registerRental
 	j 		main
 callRegisterDevolution:
-	jal		registerDevolution
+	#jal		registerDevolution
 	j 		main
 callAppendMovie:
 	jal 	appendMovie

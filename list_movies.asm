@@ -2,7 +2,6 @@
     MOVIES_FILE_NAME: 		.asciiz "mmrs/movies.txt"
     SEPARATOR: 				.asciiz "+----------------------------------------+------------------------+---------------------+-------------+-------------+---------------+\n"
     HEADER: 				.asciiz    "|                 Título                 |         Diretor        |  Ano de lançamento  |   Duração   |  Nota IMDB  |     Status    |\n"
-    LINE_START: 			.asciiz "| "
     MSG_PRESS_TO_RETURN: 	.asciiz "Pressione qualquer tecla para voltar."
     lineToPrint: 	.space 117
     buffer: 		.space 2048
@@ -33,7 +32,6 @@ listMovies:
     li      $a2, 2048
     syscall
 
-    move    $t1, $v0
     li      $v0, 16
     move    $a0, $t0
     syscall
