@@ -1,18 +1,18 @@
 .data
-	CLIENTS_FILE_NAME: .asciiz "mmrs/clients.txt"
-	PROMPT_NAME: .asciiz "Nome: "
+	CLIENTS_FILE_NAME: 	.asciiz "mmrs/clients.txt"
+	PROMPT_NAME: 		.asciiz "Nome: "
 	PROMPT_PHONENUMBER: .asciiz "Celular: "
-	PROMPT_EMAIL: .asciiz "Email: "
-	MSG_CLIENT_ADDED: .asciiz "Cliente adicionado com sucesso."
+	PROMPT_EMAIL: 		.asciiz "Email: "
+	MSG_CLIENT_ADDED: 	.asciiz "Cliente adicionado com sucesso."
 	MSG_PHONE_HAS_CHAR: .asciiz "Número de telefone inválido."
-	name: .space 48
-	phonenumber: .space 16
-	email: .space 48
-	lineToWrite: .space 200
+	STATUS_NONE: 		.asciiz "none\n"
+	name: 			.space 48
+	phonenumber: 	.space 16
+	email: 			.space 48
+	lineToWrite: 	.space 200
 .text 
 	.globl newClient
 newClient:
-getUserName:
 	li 		$v0, 4
 	la 		$a0, PROMPT_NAME
 	syscall
@@ -29,17 +29,17 @@ loop_formatName:
 	beq 	$s1, 32, spaceToUnderscore
 	blt 	$s1, 97, upperToLower
 	addi 	$s0, $s0, 1
-	j loop_formatName
+	j 		loop_formatName
 upperToLower:
 	addi 	$s1, $s1, 32
 	sb 		$s1, 0($s0)
 	addi 	$s0, $s0, 1
-	j loop_formatName
+	j 		loop_formatName
 spaceToUnderscore:
 	li 		$s2, 95
 	sb 		$s2, 0($s0) 
 	addi 	$s0, $s0, 1
-	j loop_formatName
+	j 		loop_formatName
 getUserPhone:
 	sb 		$zero, 0($s0)
 	li 		$v0, 4
@@ -59,7 +59,7 @@ loop_checkForChar:
 	blt 	$s1, 48, charFound
 	bgt 	$s1, 57, charFound
 	addi 	$s0, $s0, 1
-	j loop_checkForChar
+	j 		loop_checkForChar
 charFound:
 	la 		$s0, MSG_PHONE_HAS_CHAR
 	la 		$s1, message
@@ -69,7 +69,7 @@ loop_charFound:
 	sb 		$s2, 0($s1)
 	addi 	$s0, $s0, 1
 	addi	$s1, $s1, 1
-	j loop_charFound
+	j 		loop_charFound
 endloop_charFound:
 	sb 		$s2, 1($s1)
 	
@@ -94,7 +94,7 @@ loop_printNameToLineBuffer:
 	sb 		$s3, 0($s0)
 	addi 	$s0, $s0, 1
 	addi 	$s1, $s1, 1
-	j loop_printNameToLineBuffer
+	j 		loop_printNameToLineBuffer
 printPhoneToLineBuffer:
 	li 		$s4, 44
 	sb 		$s4, 0($s0)
@@ -106,19 +106,29 @@ loop_printPhoneToLineBuffer:
 	sb 		$s3, 0($s0)
 	addi 	$s0, $s0, 1
 	addi 	$s1, $s1, 1
-	j loop_printPhoneToLineBuffer
+	j 		loop_printPhoneToLineBuffer
 printEmailToLineBuffer:
-	li 		$s4, 44
 	sb 		$s4, 0($s0)
 	addi 	$s0, $s0, 1
 	la 		$s1, email
 loop_printEmailToLineBuffer:
 	lb 		$s3, 0($s1)
-	beqz 	$s3, writeToFile
+	beq 	$s3, 10, printStatusToLineBuffer
 	sb 		$s3, 0($s0)
 	addi 	$s0, $s0, 1
 	addi 	$s1, $s1, 1
-	j loop_printEmailToLineBuffer
+	j 		loop_printEmailToLineBuffer
+printStatusToLineBuffer:
+	sb 		$s4, 0($s0)
+	addi 	$s0, $s0, 1
+	la		$s1, STATUS_NONE
+loop_printStatusToLineBuffer:
+	lb 		$s3, 0($s1)
+	beqz	$s3, writeToFile
+	sb		$s3, 0($s0)
+	addi	$s0, $s0, 1
+	addi 	$s1, $s1, 1
+	j		loop_printStatusToLineBuffer
 writeToFile:
 	addi 	$s0, $s0, 1
 	sb 		$zero, 0($s0)
@@ -135,7 +145,7 @@ findStringLenght:
 	beqz 	$s5, doneLenght
 	addi 	$s7, $s7, 1
 	addi 	$s6, $s6, 1
-	j findStringLenght
+	j 		findStringLenght
 doneLenght:
 	move 	$s0, $v0
 	li 		$v0, 15
@@ -156,7 +166,7 @@ loop_clientAdded:
 	sb 		$s2, 0($s1)
 	addi 	$s0, $s0, 1
 	addi 	$s1, $s1, 1
-	j loop_charFound
+	j 		loop_charFound
 endloop_clientAdded:
 	sb 		$s2, 1($s1)
 	
