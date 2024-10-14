@@ -1,3 +1,3 @@
 clube_da_luta,1998,2h19min,david_fincher,8.8,alugado
 interestelar,2015,2h5min,christopher_nolan,8.7,disponivel
-os_mais_fudidos,2024,2h,guilherme,8,disponivel
+oppenheimer,2023,3h,christophernolan,8.9,disponivel

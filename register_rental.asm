@@ -8,7 +8,8 @@
 	MSG_MOVIE_NOT_FOUND: 	.asciiz "Filme não encontrado."
 	MSG_MOVIE_RENTED:		.asciiz "Filme já está alugado."
 	MSG_SUCCESS: 			.asciiz "Locação registrada com sucesso."
-	MSG_PARABENS:			.asciiz "this is elon musk"
+	STATUS_AVAILABLE:		.asciiz "disponivel"
+	STATUS_RENTED:		.asciiz "alugado"
 	title: 			.space 48
 	clientName: 	.space 48
 	moviesBuffer: 	.space 2048
@@ -64,6 +65,7 @@ checkMovieExists:
     syscall
 
     la      $t0, moviesBuffer
+    la		$s7, moviesBuffer
     la      $t1, title
 loop_checkMovieExists:
     lb      $t2, 0($t0)
@@ -81,6 +83,7 @@ loop_nextLine:
     j       loop_nextLine
 endloop_nextLine:
     addi    $t0, $t0, 1
+    move 	$s7, $t0
     j       loop_checkMovieExists
 movieNotFound:
     la 		$t0, MSG_MOVIE_NOT_FOUND
@@ -221,7 +224,7 @@ commaFoundClient:
 	j		loop_clientFound
 checkNone:
     lb      $t2, 0($t0)
-    beq     $t2, 110, rentMovie
+    beq     $t2, 110, changeMoviesTxt
     li      $v0, 4
 	la 		$s0, MSG_CLIENT_RENTED
 	la 		$s1, message
@@ -236,8 +239,95 @@ endloop_clientRented:
 	sb 		$s2, 0($s1)
 	
 	jr 		$ra
-rentMovie:
+changeMoviesTxt:
 	la 		$t0, moviesBuffer
 	la 		$t1, clientsBuffer
+loop_changeMoviesTxt:
+	la      $t0, moviesBuffer
+    la      $t1, title
+loop_findMovieTitle:
+    lb      $t2, 0($t0)
+    lb      $t3, 0($t1)
+    beqz 	$t2, loop_success
+    beq     $t2, 44, checkTitleMatch
+    addi    $t0, $t0, 1
+    j       loop_findMovieTitle
+checkTitleMatch:
+    bne     $t2, $t3, loop_nextLineMovie
+    addi    $t0, $t0, 1
+    addi    $t1, $t1, 1
+    j       loop_findMovieTitle
+loop_nextLineMovie:
+    lb      $t2, 0($t0)
+    beq     $t2, 10, skipMovieLine
+    addi    $t0, $t0, 1
+    j       loop_nextLineMovie
+skipMovieLine:
+    addi    $t0, $t0, 1
+    j       loop_findMovieTitle
+findStatus:
+    lb      $t2, 0($t0)
+    beqz 	$t2, loop_success
+    li      $t3, 100
+    beq     $t2, $t3, changeStatus
+    addi    $t0, $t0, 1
+    j       findStatus
+changeStatus:
+	move 	$t0, $s7
+	la 		$t1, STATUS_AVAILABLE
+loop_searchDisponivel:
+	lb 		$t2, 0($t1)
+	lb 		$t3, 0($t0)
+	beqz 	$t2, replaceWithAlugado
+	bne 	$t2, $t3, nextMovieLine
+	addi 	$t0, $t0, 1
+	addi 	$t1, $t1, 1
+	j 		loop_searchDisponivel
+
+nextMovieLine:
+	lb 		$t3, 0($t0)
+	beq 	$t3, 10, loop_searchDisponivel
+	addi 	$t0, $t0, 1
+	j 		nextMovieLine
+replaceWithAlugado:
+	la 		$t1, STATUS_RENTED
+	li 		$t4, 7
+loop_replaceStatus:
+	lb 		$t2, 0($t1)
+	sb 		$t2, 0($t0)
+	addi 	$t0, $t0, 1
+	addi 	$t1, $t1, 1
+	subi 	$t4, $t4, 1
+	bnez 	$t4, loop_replaceStatus
+	li 		$v0, 13
+	la 		$a0, MOVIES_FILE_NAME
+	li 		$a1, 1
+	li 		$a2, 0
+	syscall
+	
+	move 	$t0, $v0
+	li 		$v0, 15
+	move 	$a0, $t0
+	la 		$a1, moviesBuffer
+	li 		$a2, 2048
+	syscall
+	
+	li 		$v0, 16
+	move 	$a0, $t0
+	syscall
+
+    la 		$t0, MSG_SUCCESS
+	la 		$t1, message
+loop_success:
+	lb 		$t2, 0($t0)
+	beqz 	$t2, endloop_success
+	sb 		$t2, 0($t1)
+	addi 	$t0, $t0, 1
+	addi 	$t1, $t1, 1
+	j 		loop_success
+endloop_success:
+	sb 		$t2, 0($t1)
+	
+	jr 		$ra
 	
 	

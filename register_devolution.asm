@@ -4,11 +4,10 @@
 	PROMPT_MOVIE_TITLE: 	.asciiz "Titulo do filme que deseja devolver: "
 	PROMPT_CLIENT_NAME: 	.asciiz "Nome do cliente: "
 	MSG_CLIENT_NOT_FOUND: 	.asciiz "Cliente não encontrado."
-	MSG_CLIENT_NOT_RENTED:		.asciiz "Cliente não possui nenhum filme alugado."
+	MSG_CLIENT_NOT_RENTED:	.asciiz "Cliente não possui nenhum filme alugado."
 	MSG_MOVIE_NOT_FOUND: 	.asciiz "Filme não encontrado."
 	MSG_MOVIE_NOT_RENTED:	.asciiz "Filme não está alugado."
 	MSG_SUCCESS: 			.asciiz "Devolução registrada com sucesso."
-	MSG_PARABENS:			.asciiz "this is elon musk"
 	title: 			.space 48
 	clientName: 	.space 48
 	moviesBuffer: 	.space 2048
@@ -243,20 +242,17 @@ endloop_movieNotRented:
 devolutionMovie:
     li      $t2, 97             
     sb      $t2, 0($t0)         
-
-    
     la      $t0, MSG_SUCCESS
     la      $t1, message        
-    jal     message             
+    j		message           
 
-    
     li      $v0, 13             
     la      $a0, MOVIES_FILE_NAME
     li      $a1, 1              
     li      $a2, 0
     syscall
+    
     move    $t0, $v0            
-
     li      $v0, 15            
     move    $a0, $t0            
     la      $a1, moviesBuffer  
@@ -266,16 +262,15 @@ devolutionMovie:
     li      $v0, 16             
     move    $a0, $t0
     syscall
-
     
-    la      $t0, MSG_PARABENS
+    la      $t0, MSG_SUCCESS
     la      $t1, message        
     jal     message             
 
     jr      $ra 
-    
 message:
     li      $v0, 4            
     la      $a0, message      
-    syscall                   
+    syscall
+                    
     jr      $ra

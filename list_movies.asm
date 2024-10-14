@@ -2,7 +2,7 @@
     MOVIES_FILE_NAME:         .asciiz "mmrs/movies.txt"
     SEPARATOR:                .asciiz "+--------+-------------------+---------+----------+-----------+--------+\n"
     HEADER:                   .asciiz "| Título | Ano de lançamento | Duração |  Diretor | Nota IMDB | Status |\n"
-    MSG_PRESS_TO_RETURN:      .asciiz "Pressione qualquer tecla para voltar."
+    MSG_PRESS_TO_RETURN:      .asciiz "\nPressione qualquer tecla para voltar."
     lineToPrint:              .space 117
     buffer:                   .space 2048
 
