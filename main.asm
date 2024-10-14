@@ -3,7 +3,7 @@
 	STRING_PROMPT: 		.asciiz "\n\n>> "
 	STRING_PROMPT_N: 	.asciiz ">> "
 	MSG_INVALID_OPTION: .asciiz "Opção inválida."
-	message: .space  48
+	message: 			.space  48
 .text
 	.globl message
 main:

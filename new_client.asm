@@ -6,10 +6,10 @@
 	MSG_CLIENT_ADDED: 	.asciiz "Cliente adicionado com sucesso."
 	MSG_PHONE_HAS_CHAR: .asciiz "Número de telefone inválido."
 	STATUS_NONE: 		.asciiz "none\n"
-	name: 			.space 48
-	phonenumber: 	.space 16
-	email: 			.space 48
-	lineToWrite: 	.space 200
+	name: 				.space 48
+	phonenumber: 		.space 16
+	email: 				.space 48
+	lineToWrite: 		.space 200
 .text 
 	.globl newClient
 newClient:

@@ -8,12 +8,12 @@
 	STATUS_AVAILABLE: 			.asciiz "disponivel\n"
 	MSG_RELEASE_YEAR_HAS_CHAR: 	.asciiz "Ano de lançamento inválido."
 	MSG_MOVIE_ADDED: 			.asciiz "Filme adicionado com sucesso."
-	title: 			.space 48
-	releaseYear: 	.space 6
-	duration: 		.space 10
-	director: 		.space 48
-	imdbRating: 	.space 6
-	lineToWrite: 	.space 200
+	title: 						.space 48
+	releaseYear: 				.space 6
+	duration: 					.space 10
+	director: 					.space 48
+	imdbRating: 				.space 6
+	lineToWrite: 				.space 200
 .text 
 	.globl appendMovie
 appendMovie:

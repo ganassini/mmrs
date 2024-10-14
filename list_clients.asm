@@ -1,14 +1,14 @@
 .data
-    CLIENTS_FILE_NAME:         .asciiz "mmrs/clients.txt"
-    SEPARATOR:                 .asciiz "\n+-------+----------+--------+---------------+\n"
-    SEPARATOR_2:			   .asciiz "+-------+----------+--------+---------------+\n"
-    HEADER:                    .asciiz "|  Nome | Telefone | E-Mail | Filme Alugado |\n"
-    MSG_PRESS_TO_RETURN:       .asciiz "\nPressione qualquer tecla para voltar."
-    MSG_WRONG_PASSWORD:        .asciiz "Senha Incorreta."
-    MSG_ENTER_PASSWORD:        .asciiz "Digite a senha de acesso: "
-    password:                  .asciiz "0000"
-    lineToPrint:               .space 117
-    buffer:                    .space 2048
+    CLIENTS_FILE_NAME:         	.asciiz "mmrs/clients.txt"
+    SEPARATOR:                 	.asciiz "\n+-------+----------+--------+---------------+\n"
+    SEPARATOR_2:			   	.asciiz "+-------+----------+--------+---------------+\n"
+    HEADER:                    	.asciiz "|  Nome | Telefone | E-Mail | Filme Alugado |\n"
+    MSG_PRESS_TO_RETURN:       	.asciiz "\nPressione qualquer tecla para voltar."
+    MSG_WRONG_PASSWORD:        	.asciiz "Senha Incorreta."
+    MSG_ENTER_PASSWORD:        	.asciiz "Digite a senha de acesso: "
+    password:                  	.asciiz "0000"
+    lineToPrint:				.space 117
+    buffer:                 	.space 2048
 .text
     .globl listClients
 listClients:

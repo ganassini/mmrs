@@ -5,10 +5,10 @@
     PROMPT_MOVIE_TITLE: 	.asciiz "Título do filme: "
     MSG_PRESS_TO_RETURN: 	.asciiz "\nPressione qualquer tecla para voltar."
 	MSG_MOVIE_NOT_FOUND: 	.asciiz "Filme não encontrado."
-	movieToSearch: 	.space 48 
-	lineToPrint:	.space 100
-	buffer: 		.space 2048    
-	newline: 		.asciiz "\n"                                                 
+	movieToSearch: 			.space 48 
+	lineToPrint:			.space 100
+	buffer: 				.space 2048    
+	newline: 				.asciiz "\n"                                                 
 .text
 	.globl findMovie
 findMovie: 

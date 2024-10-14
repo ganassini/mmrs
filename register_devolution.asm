@@ -8,10 +8,10 @@
 	MSG_MOVIE_NOT_FOUND: 	.asciiz "Filme não encontrado."
 	MSG_MOVIE_NOT_RENTED:	.asciiz "Filme não está alugado."
 	MSG_SUCCESS: 			.asciiz "Devolução registrada com sucesso."
-	title: 			.space 48
-	clientName: 	.space 48
-	moviesBuffer: 	.space 2048
-	clientsBuffer:  .space 2048
+	title: 					.space 48
+	clientName: 			.space 48
+	moviesBuffer: 			.space 2048
+	clientsBuffer:  		.space 2048
 .text
 	.globl registerDevolution
 registerDevolution:

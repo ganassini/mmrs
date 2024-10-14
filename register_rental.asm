@@ -9,11 +9,11 @@
 	MSG_MOVIE_RENTED:		.asciiz "Filme já está alugado."
 	MSG_SUCCESS: 			.asciiz "Locação registrada com sucesso."
 	STATUS_AVAILABLE:		.asciiz "disponivel"
-	STATUS_RENTED:		.asciiz "alugado"
-	title: 			.space 48
-	clientName: 	.space 48
-	moviesBuffer: 	.space 2048
-	clientsBuffer:  .space 2048
+	STATUS_RENTED:			.asciiz "alugado"
+	title: 					.space 48
+	clientName: 			.space 48
+	moviesBuffer: 			.space 2048
+	clientsBuffer:  		.space 2048
 .text
 	.globl registerRental
 registerRental:
