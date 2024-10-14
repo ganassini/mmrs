@@ -52,7 +52,6 @@ checkMovieExists:
     syscall
     
     move    $t0, $v0
-    
     li      $v0, 14
     move    $a0, $t0
     la      $a1, moviesBuffer
@@ -238,4 +237,7 @@ endloop_clientRented:
 	
 	jr 		$ra
 rentMovie:
+	la 		$t0, moviesBuffer
+	la 		$t1, clientsBuffer
+	
 	

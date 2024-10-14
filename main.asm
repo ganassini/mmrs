@@ -1,5 +1,5 @@
 .data
-	STRING_MENU: 		.asciiz "*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n*  locadora de filme kkkk   *\n*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n1. Registrar locação\n2. Registrar devolução\n3. Adicionar filme\n4. Buscar filme\n5. Listar filmes\n6. Novo cliente\n7. Sair\n\n"
+	STRING_MENU: 		.asciiz "*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n*  locadora de filme kkkk   *\n*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n1. Registrar locação\n2. Registrar devolução\n3. Adicionar filme\n4. Buscar filme\n5. Listar filmes\n6. Novo cliente\n7. Listar clientes\n8. Sair\n\n"
 	STRING_PROMPT: 		.asciiz "\n\n>> "
 	STRING_PROMPT_N: 	.asciiz ">> "
 	MSG_INVALID_OPTION: .asciiz "Opção inválida."
@@ -35,13 +35,14 @@ getUserOption:
 	beq 	$v0, 4, callFindMovie
 	beq 	$v0, 5, callListMovies
 	beq 	$v0, 6, callNewClient
-	beq 	$v0, 7, exitProgram
+	beq 	$v0, 7, listClients
+	beq 	$v0, 8, exitProgram
 	j 		invalidOption
 callRegisterRental:
 	jal 	registerRental
 	j 		main
 callRegisterDevolution:
-	#jal		registerDevolution
+	jal		registerDevolution
 	j 		main
 callAppendMovie:
 	jal 	appendMovie
@@ -54,6 +55,9 @@ callListMovies:
 	j 		main
 callNewClient:
 	jal 	newClient
+	j 		main
+callListClients:
+	jal 	listClients
 	j 		main
 invalidOption:
 	la 		$t1, MSG_INVALID_OPTION
